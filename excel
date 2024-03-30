@@ -1,0 +1,42 @@
+            ConnectDB();
+            OracleCommand command1 = conn.CreateCommand();
+            command1.CommandText = "@C:/Users/STUDENT/Desktop/lab6.sql";
+            command1.CommandType = CommandType.Text;
+            command1.Dispose();
+            OracleCommand command2 = conn.CreateCommand();
+            command2.CommandText = "select deptcount(department) from instructor group by(department)";
+            command2.CommandType = CommandType.Text;
+            OracleDataReader dr = command2.ExecuteReader();
+            dr.Read();
+            label8.Text = label8.Text+dr.GetInt32(0).ToString();
+           
+            command2.Dispose();
+            conn.Close();
+        }
+ }
+
+create or replace function deptcount(dept varchar)
+return integer is
+      d_count integer;
+begin
+      select count(*) into d_count
+      from instructor
+      where instructor.department = dept;
+      return d_count;
+end;
+/
+To add data grids:
+
+To display data in a table:
+Drag and drop DataGridView from toolbox on the form. Right click on dataGridView->add column (number of columns based on your requirement)-> Change the header text (Eg: deptname, name of instructor) as you want it to appear in the form.
+connect();
+comm1 = new OracleCommand();
+comm1.Connection = conn;
+comm1.CommandText = "select * from instructor where deptname="+"'ict'";
+comm1.CommandType = CommandType.Text;
+OracleDataAdapter da = new OracleDataAdapter(comm1.CommandText, conn);
+// An OracleDataAdapter object represents a data provider object that populates the DataSet and updates changes in the DataSet to the Oracle database
+DataSet ds = new DataSet(); // This is a collection of DataTables. We use the DataSet type to store many DataTables in a single collection
+da.Fill(ds, "instructor"); // DataAdapter.Fill (ds) here fetches the data from User and fills in the DataSet ds.
+dataGridView1.DataSource = ds.Tables[0]; // will access data at the 0th position. Similarly you can have one more query, one more data adaptor object, fill data set with some other relation’s data on which the query has to run ( in which case, ds.table[1] will have that queries result which should be assigned to data grid view)
+
